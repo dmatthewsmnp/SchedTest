@@ -1,18 +1,17 @@
 using System.Diagnostics.CodeAnalysis;
+using Azure.Identity;
+using Microsoft.Azure.Cosmos;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MNP.DIH.Shared.Cosmos;
 
 // Set up and run host:
 using var host = new HostBuilder()
 	.ConfigureFunctionsWorkerDefaults()
 	.ConfigureServices(services =>
 	{
-		services.AddApplicationInsightsTelemetryWorkerService(opts => opts.DependencyCollectionOptions.EnableLegacyCorrelationHeadersInjection = true)
-			.AddCosmosContainerHandle(
-				cosmosEndpoint: "https://scheduling-dbacct-dev.documents.azure.com:443/",
-				defaultDbName: "scheduling-dbacct-dev-db",
-				defaultContainerName: "PersonnelEngagementSchedule");
+		services
+			.AddApplicationInsightsTelemetryWorkerService(opts => opts.DependencyCollectionOptions.EnableLegacyCorrelationHeadersInjection = true)
+			.AddSingleton(_ => new CosmosClient("https://scheduling-dbacct-dev.documents.azure.com:443/", new DefaultAzureCredential(new DefaultAzureCredentialOptions())));
 	})
 	.Build();
 await host.RunAsync();

@@ -6,19 +6,18 @@ using Microsoft.Azure.Cosmos;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
-using MNP.DIH.Shared.Cosmos;
 
 namespace SchedTest;
 
 public class DbConnTest
 {
-	private readonly ICosmosContainerHandle _cosmosContainerHandle;
+	private readonly Container _container;
 	private readonly ILogger _logger;
 
-	public DbConnTest(ICosmosContainerHandle cosmosContainerHandle, ILoggerFactory loggerFactory)
+	public DbConnTest(CosmosClient cosmosClient, ILoggerFactory loggerFactory)
 	{
 		_logger = loggerFactory.CreateLogger<DbConnTest>();
-		_cosmosContainerHandle = cosmosContainerHandle;
+		_container = cosmosClient.GetContainer("scheduling-dbacct-dev-db", "PersonnelEngagementSchedule");
 	}
 
 	[Function("DbConnTest")]
@@ -44,7 +43,7 @@ public class DbConnTest
 
 		try
 		{
-			var itemResponse = await _cosmosContainerHandle.ReadItemAsync<SampleDoc>(new Guid("12fc0713-54e0-484c-b44c-ab4c9b431066"), new PartitionKey("f7ed658e-b152-48c4-9e94-407f43a8f02d"));
+			var itemResponse = await _container.ReadItemAsync<SampleDoc>("12fc0713-54e0-484c-b44c-ab4c9b431066", new PartitionKey("f7ed658e-b152-48c4-9e94-407f43a8f02d"));
 			var response = req.CreateResponse();
 			await response.WriteAsJsonAsync(itemResponse.Resource);
 			return response;
