@@ -24,22 +24,22 @@ public class DbConnTest
 	public async Task<HttpResponseData> Run([HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "dbconntest")] HttpRequestData req)
 	{
 		_logger.LogInformation("Starting function");
-		try
-		{
-			await HostTest("scheduling-dbacct-dev.documents.azure.com");
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error running connection test (CosmosDb)");
-		}
-		try
-		{
-			await HostTest("schdlfncstrgedev.blob.core.windows.net");
-		}
-		catch (Exception ex)
-		{
-			_logger.LogError(ex, "Error running connection test (storage)");
-		}
+		//try
+		//{
+		//	await HostTest("scheduling-dbacct-dev.documents.azure.com");
+		//}
+		//catch (Exception ex)
+		//{
+		//	_logger.LogError(ex, "Error running connection test (CosmosDb)");
+		//}
+		//try
+		//{
+		//	await HostTest("schdlfncstrgedev.blob.core.windows.net");
+		//}
+		//catch (Exception ex)
+		//{
+		//	_logger.LogError(ex, "Error running connection test (storage)");
+		//}
 
 		try
 		{

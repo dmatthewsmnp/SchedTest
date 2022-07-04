@@ -11,7 +11,11 @@ using var host = new HostBuilder()
 	{
 		services
 			.AddApplicationInsightsTelemetryWorkerService(opts => opts.DependencyCollectionOptions.EnableLegacyCorrelationHeadersInjection = true)
-			.AddSingleton(_ => new CosmosClient("https://scheduling-dbacct-dev.documents.azure.com:443/", new DefaultAzureCredential(new DefaultAzureCredentialOptions())));
+			.AddSingleton(_ =>
+				new CosmosClient(
+					"https://scheduling-dbacct-dev.documents.azure.com:443/",
+					new DefaultAzureCredential(new DefaultAzureCredentialOptions()),
+					new CosmosClientOptions { ConnectionMode = ConnectionMode.Gateway }));
 	})
 	.Build();
 await host.RunAsync();
